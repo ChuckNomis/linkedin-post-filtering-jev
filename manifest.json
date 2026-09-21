@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "Highlights job posts on LinkedIn that match your search criteria and dims non-job content, using Jev AI classification.",
   "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["*://*.linkedin.com/*"],
+  "host_permissions": ["*://*.linkedin.com/*", "https://api.typesafe.ai/*"],
   "background": {
     "service_worker": "background.js"
   },
