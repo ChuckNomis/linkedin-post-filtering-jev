@@ -39,10 +39,13 @@ function processPost(postEl) {
 }
 
 function scanFeed(root = document) {
-  root.querySelectorAll(POST_SELECTOR).forEach(processPost);
+  const matches = root.querySelectorAll(POST_SELECTOR);
+  console.log("[JevFilter] scanFeed found", matches.length, "posts on", location.pathname);
+  matches.forEach(processPost);
 }
 
 function initObserver() {
+  console.log("[JevFilter] initObserver running on", location.pathname);
   const feedContainer = document.querySelector("main") || document.body;
 
   const observer = new MutationObserver((mutations) => {
@@ -62,6 +65,7 @@ function initObserver() {
   scanFeed();
 }
 
+console.log("[JevFilter] content script loaded, readyState =", document.readyState, "url =", location.href);
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initObserver);
 } else {
