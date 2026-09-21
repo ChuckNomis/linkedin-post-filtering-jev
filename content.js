@@ -1,4 +1,4 @@
-const POST_SELECTOR = ".feed-shared-update-v2";
+const POST_SELECTOR = 'div[role="listitem"][componentkey^="update-card-focus"]';
 const PROCESSED_ATTR = "data-jev-processed";
 const CLASSIFICATION_CLASSES = {
   good_match: "jev-good-match",
