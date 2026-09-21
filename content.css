@@ -1,0 +1,14 @@
+.jev-good-match {
+  border-left: 6px solid #4caf50 !important;
+  background-color: rgba(76, 175, 80, 0.05) !important;
+}
+
+.jev-other-job {
+  border-left: 6px solid #ffeb3b !important;
+  opacity: 0.7 !important;
+}
+
+.jev-not-job {
+  opacity: 0.15 !important;
+  filter: grayscale(100%) !important;
+}

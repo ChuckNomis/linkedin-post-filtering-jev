@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LinkedIn Post Filter Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>LinkedIn Post Filter</h1>
+    <p class="subtitle">Configure your Jev API key and job search criteria.</p>
+
+    <form id="settings-form">
+      <label for="apiKey">Jev API Key</label>
+      <input type="password" id="apiKey" name="apiKey" placeholder="sk-..." autocomplete="off" />
+
+      <label for="targetRoles">Target Roles</label>
+      <input
+        type="text"
+        id="targetRoles"
+        name="targetRoles"
+        placeholder="Backend Engineer, AI Developer, Product Manager"
+      />
+      <p class="hint">Comma-separated list of roles you're looking for.</p>
+
+      <label>Target Levels</label>
+      <div class="checkbox-group" id="targetLevels">
+        <label><input type="checkbox" value="Junior" /> Junior</label>
+        <label><input type="checkbox" value="Mid" /> Mid</label>
+        <label><input type="checkbox" value="Senior" /> Senior</label>
+        <label><input type="checkbox" value="Director" /> Director</label>
+        <label><input type="checkbox" value="Management" /> Management</label>
+      </div>
+
+      <button type="submit">Save Settings</button>
+      <p id="status" class="status" role="status"></p>
+    </form>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
