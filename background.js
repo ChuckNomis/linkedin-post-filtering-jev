@@ -36,24 +36,33 @@ async function classifyPost(postText) {
   }
 
   const payload = buildPrompt(postText, targetRoles, targetLevels);
+  const maxRetries = 3;
 
   try {
-    const response = await fetch(JEV_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      const response = await fetch(JEV_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      return { error: `jev_api_error_${response.status}` };
+      if (response.ok) {
+        const data = await response.json();
+        const classification = data?.answers?.match_level?.choice;
+        return { classification };
+      }
+
+      const isRetryable = response.status === 429 || response.status === 529;
+      if (!isRetryable || attempt === maxRetries) {
+        return { error: `jev_api_error_${response.status}` };
+      }
+
+      const backoffMs = 500 * 2 ** attempt;
+      await new Promise((resolve) => setTimeout(resolve, backoffMs));
     }
-
-    const data = await response.json();
-    const classification = data?.answers?.match_level ?? data?.match_level;
-    return { classification };
   } catch (err) {
     return { error: "network_error", message: err.message };
   }
