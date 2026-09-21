@@ -58,7 +58,7 @@ function scanFeed(root = document) {
 
 function initObserver() {
   document.documentElement.setAttribute("data-jev-dbg-init-ran", "true");
-  const feedContainer = document.querySelector("main") || document.body;
+  const feedContainer = document.body;
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
