@@ -70,7 +70,9 @@ async function classifyPost(postText) {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message?.type === "CLASSIFY_POST") {
-    classifyPost(message.text).then(sendResponse);
+    classifyPost(message.text)
+      .then(sendResponse)
+      .catch((err) => sendResponse({ error: "unexpected_error", message: err.message }));
     return true; // keep the message channel open for async response
   }
   return false;

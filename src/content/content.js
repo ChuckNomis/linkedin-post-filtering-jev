@@ -26,7 +26,7 @@ function processPost(postEl) {
 
   chrome.runtime.sendMessage({ type: "CLASSIFY_POST", text }, (response) => {
     if (chrome.runtime.lastError) {
-      postEl.removeAttribute(PROCESSED_ATTR);
+      postEl.setAttribute(PROCESSED_ATTR, "error");
       return;
     }
     if (response?.error) {
@@ -39,13 +39,10 @@ function processPost(postEl) {
 }
 
 function scanFeed(root = document) {
-  const matches = root.querySelectorAll(POST_SELECTOR);
-  document.documentElement.setAttribute("data-jev-scan-count", String(matches.length));
-  matches.forEach(processPost);
+  root.querySelectorAll(POST_SELECTOR).forEach(processPost);
 }
 
 function initObserver() {
-  document.documentElement.setAttribute("data-jev-init-ran", "true");
   const feedContainer = document.querySelector("main") || document.body;
 
   const observer = new MutationObserver((mutations) => {
@@ -65,7 +62,6 @@ function initObserver() {
   scanFeed();
 }
 
-document.documentElement.setAttribute("data-jev-script-loaded", "true");
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initObserver);
 } else {
