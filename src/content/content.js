@@ -17,30 +17,19 @@ function applyClassification(postEl, classification) {
   postEl.classList.add(className);
 }
 
-function bump(attr) {
-  const html = document.documentElement;
-  html.setAttribute(attr, String(Number(html.getAttribute(attr) || "0") + 1));
-}
-
 function processPost(postEl) {
-  bump("data-jev-dbg-processpost-called");
   if (postEl.getAttribute(PROCESSED_ATTR)) return;
   postEl.setAttribute(PROCESSED_ATTR, "pending");
 
   const text = extractPostText(postEl);
-  document.documentElement.setAttribute("data-jev-dbg-last-text-len", String(text.length));
   if (!text) return;
 
-  bump("data-jev-dbg-sendmessage-called");
   chrome.runtime.sendMessage({ type: "CLASSIFY_POST", text }, (response) => {
-    bump("data-jev-dbg-callback-fired");
     if (chrome.runtime.lastError) {
-      document.documentElement.setAttribute("data-jev-dbg-lasterror", chrome.runtime.lastError.message || "unknown");
       postEl.setAttribute(PROCESSED_ATTR, "error");
       return;
     }
     if (response?.error) {
-      document.documentElement.setAttribute("data-jev-dbg-response-error", response.error);
       postEl.setAttribute(PROCESSED_ATTR, "error");
       return;
     }
@@ -50,16 +39,10 @@ function processPost(postEl) {
 }
 
 function scanFeed(root = document) {
-  const matches = root.querySelectorAll(POST_SELECTOR);
-  bump("data-jev-dbg-scanfeed-called");
-  document.documentElement.setAttribute("data-jev-dbg-last-scan-count", String(matches.length));
-  matches.forEach(processPost);
+  root.querySelectorAll(POST_SELECTOR).forEach(processPost);
 }
 
 function initObserver() {
-  document.documentElement.setAttribute("data-jev-dbg-init-ran", "true");
-  const feedContainer = document.body;
-
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       mutation.addedNodes.forEach((node) => {
@@ -73,11 +56,10 @@ function initObserver() {
     }
   });
 
-  observer.observe(feedContainer, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true });
   scanFeed();
 }
 
-document.documentElement.setAttribute("data-jev-dbg-script-loaded", "true");
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initObserver);
 } else {
